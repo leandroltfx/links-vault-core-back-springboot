@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.naming.AuthenticationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,26 @@ public class GlobalHandleException {
         );
         return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(apiResponseDTO);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponseDTO> handleAuthenticationException() {
+        ApiResponseDTO apiResponseDTO = new ApiResponseDTO(
+                "Credenciais inválidas."
+        );
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(apiResponseDTO);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponseDTO> handleIllegalArgumentException() {
+        ApiResponseDTO apiResponseDTO = new ApiResponseDTO(
+                "Informe apenas o e-mail ou o nome de usuário."
+        );
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(apiResponseDTO);
     }
 
